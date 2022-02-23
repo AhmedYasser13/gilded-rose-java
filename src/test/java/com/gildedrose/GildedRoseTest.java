@@ -6,93 +6,94 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GildedRoseTest {
-    private Item[] items;
     private GildedRose gildedRose;
 
     @BeforeEach
     void beforeEach() {
-        items = new Item[]{
+        Item[] items = new Item[]{
                 new Item("foo", 1, 0),
                 new Item("item2", 0, 0),
                 new Item("item1", 0, 4),
                 new Item("Aged Brie", 2, 0),
                 new Item("Aged Brie", 1, 50),
-                new Item("Sulfuras, Hand of Ragnaros", 2, 1),
-                new Item("Backstage passes to a TAFKAL80ETC concert", 50, 1)};
+                new Item("Sulfuras, Hand of Ragnaros", 2, 80),
+                new Item("Backstage passes to a TAFKAL80ETC concert", 50, 1),
+                new Item("Backstage passes to a TAFKAL80ETC concert", 10, 0),
+                new Item("Backstage passes to a TAFKAL80ETC concert", 5, 0),
+                new Item("Backstage passes to a TAFKAL80ETC concert", 0, 10),
+                new Item("Backstage passes to a TAFKAL80ETC concert", 11, 50)
+        };
         gildedRose = new GildedRose(items);
     }
 
     @Test
     void qualityDegradesTwiceAfterSellIn() {
         gildedRose.updateQuality();
-        assertEquals(2, items[2].quality);
+        assertEquals(2, gildedRose.items[2].quality);
         gildedRose.updateQuality();
-        assertEquals(0, items[2].quality);
+        assertEquals(0, gildedRose.items[2].quality);
     }
 
     @Test
-    void backstagePassesQualityCapped() {
-        items[6].quality = 50;
+    void backstagePassesQualityCappedTo50() {
         gildedRose.updateQuality();
+        assertEquals(50, gildedRose.items[10].quality);
+        gildedRose.items[9].sellIn=10;
         gildedRose.updateQuality();
-        assertEquals(50, items[6].quality);
+        assertEquals(50, gildedRose.items[10].quality);
+        gildedRose.items[9].sellIn=5;
+        gildedRose.updateQuality();
+        assertEquals(50, gildedRose.items[10].quality);
     }
 
     @Test
     void backstagePasses() {
         gildedRose.updateQuality();
-        assertEquals("Backstage passes to a TAFKAL80ETC concert", items[6].name);
-        assertEquals(49, items[6].sellIn);
-        assertEquals(2, items[6].quality);
-        items[6].sellIn = 10;
-        items[6].quality = 0;
+        assertEquals("Backstage passes to a TAFKAL80ETC concert", gildedRose.items[6].name);
+        assertEquals(49, gildedRose.items[6].sellIn);
+        assertEquals(2, gildedRose.items[6].quality);
+    }
+
+    @Test
+    void backstagePassesLast3Days(){
         gildedRose.updateQuality();
-        assertEquals(9, items[6].sellIn);
-        assertEquals(2, items[6].quality);
-        items[6].sellIn = 5;
-        items[6].quality = 0;
+        assertEquals(4, gildedRose.items[8].sellIn);
+        assertEquals(3, gildedRose.items[8].quality);
+    }
+
+    @Test
+    void backstagePassesLast10Days() {
         gildedRose.updateQuality();
-        assertEquals(4, items[6].sellIn);
-        assertEquals(3, items[6].quality);
+        assertEquals(9, gildedRose.items[7].sellIn);
+        assertEquals(2, gildedRose.items[7].quality);
     }
 
     @Test
     void backstagePassesQualityAfterSellIn() {
-        items[6].sellIn = 0;
         gildedRose.updateQuality();
-        assertEquals(0, items[6].quality);
+        assertEquals(0, gildedRose.items[9].quality);
     }
 
     @Test
     void sulfarus() {
         gildedRose.updateQuality();
-        gildedRose.updateQuality();
-        assertEquals(2, items[5].sellIn);
-        assertEquals(1, items[5].quality);
-    }
-
-    @Test
-    void sulfarusQualityCanExceed50() {
-        assertEquals("Sulfuras, Hand of Ragnaros", items[5].name);
-        items[5].quality = 60;
-        gildedRose.updateQuality();
-        assertEquals(2, items[5].sellIn);
-        assertEquals(60, items[5].quality);
+        assertEquals(2, gildedRose.items[5].sellIn);
+        assertEquals(80, gildedRose.items[5].quality);
     }
 
     @Test
     void maximumQualityIsFifty() {
         gildedRose.updateQuality();
         gildedRose.updateQuality();
-        assertEquals(50, items[4].quality);
+        assertEquals(50, gildedRose.items[4].quality);
     }
 
     @Test
     void agedBrieQuality() {
         gildedRose.updateQuality();
-        assertEquals(1, items[3].quality);
+        assertEquals(1, gildedRose.items[3].quality);
         gildedRose.updateQuality();
-        assertEquals(2, items[3].quality);
+        assertEquals(2, gildedRose.items[3].quality);
     }
 
     @Test
@@ -103,9 +104,9 @@ class GildedRoseTest {
     }
 
     @Test
-    void QualityNeverNegative() {
+    void qualityCanNeverBeNegative() {
         gildedRose.updateQuality();
         assertEquals(0, gildedRose.items[1].quality);
-    }
 
+    }
 }
