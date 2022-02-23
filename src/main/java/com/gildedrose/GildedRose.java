@@ -19,9 +19,9 @@ class GildedRose {
 
     private void updateQuality(Item item) {
         if (item.name.equals("Aged Brie")) {
-            updateSpecialItem(item);
+            increaseQualityCapped(item);
         } else if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            updateSpecialItem(item);
+            updateBackStagePasses(item);
         } else {
             updateNormalItem(item);
         }
@@ -36,9 +36,7 @@ class GildedRose {
     private void expireItem(Item item) {
         if (item.sellIn < 0) {
             if (item.name.equals("Aged Brie")) {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1;
-                }
+                increaseQualityCapped(item);
             } else {
                 if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
                     item.quality = 0;
@@ -53,24 +51,24 @@ class GildedRose {
         }
     }
 
-    private void updateSpecialItem(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1;
-
-            if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (item.sellIn < 11) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-
-                if (item.sellIn < 6) {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-            }
+    private void updateBackStagePasses(Item item) {
+        increaseQualityCapped(item);
+        if (item.sellIn < 11) {
+            increaseQualityCapped(item);
         }
+        if (item.sellIn < 6) {
+            increaseQualityCapped(item);
+        }
+    }
+
+    private void increaseQualityCapped(Item item) {
+        if (isQualityMaxed(item)) {
+            item.quality = item.quality + 1;
+        }
+    }
+
+    private boolean isQualityMaxed(Item item) {
+        return item.quality < 50;
     }
 
     private void updateNormalItem(Item item) {
