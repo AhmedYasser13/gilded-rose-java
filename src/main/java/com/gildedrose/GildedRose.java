@@ -13,41 +13,51 @@ class GildedRose {
 
             updateSellIn(item);
 
-            expireItem(item);
+            if (item.sellIn < 0) {
+                expireItem(item);
+            }
         }
     }
 
     private void updateQuality(Item item) {
         if (item.name.equals("Aged Brie")) {
-            increaseQualityCapped(item);
+            updateAgedBrie(item);
         } else if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
             updateBackStagePasses(item);
+        } else if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
+            return;
         } else {
             updateNormalItem(item);
         }
     }
 
     private void updateSellIn(Item item) {
-        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-            item.sellIn = item.sellIn - 1;
+        if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
+            return;
         }
+        item.sellIn = item.sellIn - 1;
     }
 
     private void expireItem(Item item) {
-        if (item.sellIn < 0) {
-            if (item.name.equals("Aged Brie")) {
-                increaseQualityCapped(item);
-            } else {
-                if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                    item.quality = 0;
-                } else {
-                    if (item.quality > 0) {
-                        if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                            item.quality = item.quality - 1;
-                        }
-                    }
-                }
-            }
+        if (item.name.equals("Aged Brie")) {
+            return;
+        }
+        if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+            item.quality = 0;
+        } else if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
+            return;
+        } else {
+            expireNormalItem(item);
+        }
+    }
+
+    private void expireNormalItem(Item item) {
+        decreaseQualityCapped(item);
+    }
+
+    private void decreaseQualityCapped(Item item) {
+        if (item.quality > 0) {
+            item.quality = item.quality - 1;
         }
     }
 
@@ -61,21 +71,17 @@ class GildedRose {
         }
     }
 
+    private void updateAgedBrie(Item item) {
+        increaseQualityCapped(item);
+    }
+
     private void increaseQualityCapped(Item item) {
-        if (isQualityMaxed(item)) {
+        if (item.quality < 50) {
             item.quality = item.quality + 1;
         }
     }
 
-    private boolean isQualityMaxed(Item item) {
-        return item.quality < 50;
-    }
-
     private void updateNormalItem(Item item) {
-        if (item.quality > 0) {
-            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                item.quality = item.quality - 1;
-            }
-        }
+        decreaseQualityCapped(item);
     }
 }
