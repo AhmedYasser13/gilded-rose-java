@@ -28,27 +28,27 @@ class GildedRoseTest {
 
     @Test
     void qualityDegradesTwiceAfterSellIn() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(2, gildedRose.items[2].quality);
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(0, gildedRose.items[2].quality);
     }
 
     @Test
     void backstagePassesQualityCappedTo50() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(50, gildedRose.items[10].quality);
         gildedRose.items[9].sellIn=10;
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(50, gildedRose.items[10].quality);
         gildedRose.items[9].sellIn=5;
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(50, gildedRose.items[10].quality);
     }
 
     @Test
     void backstagePasses() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals("Backstage passes to a TAFKAL80ETC concert", gildedRose.items[6].name);
         assertEquals(49, gildedRose.items[6].sellIn);
         assertEquals(2, gildedRose.items[6].quality);
@@ -56,56 +56,59 @@ class GildedRoseTest {
 
     @Test
     void backstagePassesLast3Days(){
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(4, gildedRose.items[8].sellIn);
         assertEquals(3, gildedRose.items[8].quality);
     }
 
     @Test
     void backstagePassesLast10Days() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(9, gildedRose.items[7].sellIn);
         assertEquals(2, gildedRose.items[7].quality);
     }
 
     @Test
     void backstagePassesQualityAfterSellIn() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(0, gildedRose.items[9].quality);
     }
 
     @Test
     void sulfarus() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
+        assertEquals(2, gildedRose.items[5].sellIn);
+        assertEquals(80, gildedRose.items[5].quality);
+        gildedRose.simulateDay();
         assertEquals(2, gildedRose.items[5].sellIn);
         assertEquals(80, gildedRose.items[5].quality);
     }
 
     @Test
     void maximumQualityIsFifty() {
-        gildedRose.updateQuality();
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
+        gildedRose.simulateDay();
         assertEquals(50, gildedRose.items[4].quality);
     }
 
     @Test
     void agedBrieQuality() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(1, gildedRose.items[3].quality);
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(2, gildedRose.items[3].quality);
     }
 
     @Test
     void foo() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(0, gildedRose.items[0].quality);
         assertEquals("foo", gildedRose.items[0].name);
     }
 
     @Test
     void qualityCanNeverBeNegative() {
-        gildedRose.updateQuality();
+        gildedRose.simulateDay();
         assertEquals(0, gildedRose.items[1].quality);
 
     }
