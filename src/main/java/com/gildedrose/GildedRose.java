@@ -21,30 +21,7 @@ class GildedRose {
             } else {
                 updateStrategy = new ItemUpdateStrategy();
             }
-
-            updateQuality(item, updateStrategy);
-
-            updateSellIn(item, updateStrategy);
-
-            if (isItemExpired(item)) {
-                expireItem(item, updateStrategy);
-            }
+            updateStrategy.update(item);
         }
-    }
-
-    private void updateQuality(Item item, ItemUpdateStrategy updateStrategy) {
-        updateStrategy.updateQuality(item);
-    }
-
-    private void updateSellIn(Item item, ItemUpdateStrategy updateStrategy) {
-        updateStrategy.updateSellIn(item);
-    }
-
-    private void expireItem(Item item, ItemUpdateStrategy updateStrategy) {
-        updateStrategy.expireItem(item);
-    }
-
-    private boolean isItemExpired(Item item) {
-        return item.sellIn < 0;
     }
 }
