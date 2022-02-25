@@ -12,16 +12,21 @@ class GildedRose {
     public void simulateDay() {
         ItemUpdateStrategy updateStrategy;
         for (Item item : items) {
-            if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                updateStrategy = new SulfurasUpdateStrategy();
-            } else if (item.name.equals("Aged Brie")) {
-                updateStrategy = new AgedBrieUpdateStrategy();
-            } else if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                updateStrategy = new BackstagePassesUpdateStrategy();
-            } else {
-                updateStrategy = new ItemUpdateStrategy();
-            }
+            updateStrategy = createStrategy(item);
             updateStrategy.update(item);
+        }
+    }
+
+    private ItemUpdateStrategy createStrategy(Item item) {
+        switch (item.name) {
+            case "Sulfuras, Hand of Ragnaros":
+                return new SulfurasUpdateStrategy();
+            case "Aged Brie":
+                return new AgedBrieUpdateStrategy();
+            case "Backstage passes to a TAFKAL80ETC concert":
+                return new BackstagePassesUpdateStrategy();
+            default:
+                return new ItemUpdateStrategy();
         }
     }
 }
