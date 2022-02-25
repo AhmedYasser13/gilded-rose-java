@@ -12,4 +12,7 @@ public class BackstagePassesUpdateStrategy extends ItemUpdateStrategy {
             increaseQualityCapped(item);
         }
     }
+    public void expireItem(Item item) {
+        item.quality = 0;
+    }
 }

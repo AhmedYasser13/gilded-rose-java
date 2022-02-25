@@ -7,6 +7,14 @@ public class ItemUpdateStrategy {
         decreaseQualityCapped(item);
     }
 
+    public void updateSellIn(Item item) {
+        item.sellIn = item.sellIn - 1;
+    }
+
+    public void expireItem(Item item) {
+        decreaseQualityCapped(item);
+    }
+
     private void decreaseQualityCapped(Item item) {
         if (item.quality > 0) {
             item.quality = item.quality - 1;
