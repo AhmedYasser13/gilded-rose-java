@@ -25,6 +25,8 @@ class GildedRose {
                 return new AgedBrieUpdateStrategy();
             case "Backstage passes to a TAFKAL80ETC concert":
                 return new BackstagePassesUpdateStrategy();
+            case "Conjured Mana Cake":
+                return new ConjuredUpdateStrategy();
             default:
                 return new ItemUpdateStrategy();
         }
