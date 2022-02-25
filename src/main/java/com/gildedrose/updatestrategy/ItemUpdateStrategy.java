@@ -13,6 +13,9 @@ public class ItemUpdateStrategy {
 
     protected void updateQuality(Item item) {
         decreaseQualityCapped(item);
+        if(item.name.equals("Conjured Mana Cake")){
+            decreaseQualityCapped(item);
+        }
     }
 
     protected void updateSellIn(Item item) {
@@ -21,6 +24,9 @@ public class ItemUpdateStrategy {
 
     protected void expireItem(Item item) {
         decreaseQualityCapped(item);
+        if(item.name.equals("Conjured Mana Cake")){
+            decreaseQualityCapped(item);
+        }
     }
 
     protected void increaseQualityCapped(Item item) {
