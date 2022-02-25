@@ -13,19 +13,19 @@ class GildedRose {
 
             updateSellIn(item);
 
-            if (item.sellIn < 0) {
+            if (isItemExpired(item)) {
                 expireItem(item);
             }
         }
     }
 
     private void updateQuality(Item item) {
-        if (item.name.equals("Aged Brie")) {
+        if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
+            return;
+        } else if (item.name.equals("Aged Brie")) {
             updateAgedBrie(item);
         } else if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
             updateBackStagePasses(item);
-        } else if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
-            return;
         } else {
             updateNormalItem(item);
         }
@@ -39,26 +39,17 @@ class GildedRose {
     }
 
     private void expireItem(Item item) {
-        if (item.name.equals("Aged Brie")) {
+        if (item.name.equals("Aged Brie") || item.name.equals("Sulfuras, Hand of Ragnaros")) {
             return;
-        }
-        if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-            item.quality = 0;
-        } else if (item.name.equals("Sulfuras, Hand of Ragnaros")) {
-            return;
+        } else if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+            expireBackStagePasses(item);
         } else {
             expireNormalItem(item);
         }
     }
 
-    private void expireNormalItem(Item item) {
-        decreaseQualityCapped(item);
-    }
-
-    private void decreaseQualityCapped(Item item) {
-        if (item.quality > 0) {
-            item.quality = item.quality - 1;
-        }
+    private boolean isItemExpired(Item item) {
+        return item.sellIn < 0;
     }
 
     private void updateBackStagePasses(Item item) {
@@ -75,13 +66,27 @@ class GildedRose {
         increaseQualityCapped(item);
     }
 
+    private void updateNormalItem(Item item) {
+        decreaseQualityCapped(item);
+    }
+
+    private void expireBackStagePasses(Item item) {
+        item.quality = 0;
+    }
+
+    private void expireNormalItem(Item item) {
+        decreaseQualityCapped(item);
+    }
+
+    private void decreaseQualityCapped(Item item) {
+        if (item.quality > 0) {
+            item.quality = item.quality - 1;
+        }
+    }
+
     private void increaseQualityCapped(Item item) {
         if (item.quality < 50) {
             item.quality = item.quality + 1;
         }
-    }
-
-    private void updateNormalItem(Item item) {
-        decreaseQualityCapped(item);
     }
 }
